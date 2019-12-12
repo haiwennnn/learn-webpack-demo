@@ -2,18 +2,19 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const ManifestPlugin = require('webpack-manifest-plugin')
+const webpack = require('webpack')
 
 module.exports = {
     entry: './src/script/index.js',
     entry: {
         app: './src/script/index.js',
-        print: './src/script/print.js',
     },
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
     devServer: {
         contentBase: './dist',
         compress: true,
-        port: 9000
+        port: 9000,
+        hot: true
     },
     output: {
         filename: '[name].bundle.js',
@@ -26,7 +27,9 @@ module.exports = {
             title: 'webpack-study-demo',
             template: './src/index.html'
         }),
-        new ManifestPlugin()
+        new ManifestPlugin(),
+        new webpack.NamedModulesPlugin(),
+        new webpack.HotModuleReplacementPlugin()
     ],
     module: {
         rules: [

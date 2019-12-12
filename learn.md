@@ -258,5 +258,38 @@ output.publicPath = '/'
 通过``node server``跑起服务后，修改文件会自动重新打包
 
 
-## 模块热替换
+## 模块热替换 (Hot Module Replacement HMR)
+
+#### 如何启用HMR
+
+如果使用了``webpack-dev-server``需要更新配置文件
+
+```
+const webpack = require('webpack')
+devServer: {
+    hot: true
+}
+plugins: [
+    ...
+    new webpack.NamedModulesPlugin(), # 用来增加输出信息
+    new webpack.HotModuleReplacementPlugin()# 用来增加输出信息
+    ...
+]
+
+```
+
+在代码内部能够通过``module.hot.accept``拿到更新的模块
+
+```
+if(module.hot){
+    module.hot.accept('./print.js', function() {
+        printMe()
+    })
+}
+```
+
+[HMR运行原理](https://www.webpackjs.com/concepts/hot-module-replacement/)，[HMR-API](https://www.webpackjs.com/api/hot-module-replacement/)
+
+
+## Tree Shaking
 
