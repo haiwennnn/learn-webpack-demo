@@ -194,6 +194,8 @@ moudle.exports = {
 
 ``webpack-dev-server``模块提供了一个建议服务器，并且能够监听到文件的修改，自动刷新浏页面
 
+[参考链接](https://www.jianshu.com/p/9a410c71ed74)，[解读](https://www.jianshu.com/p/1a7653ced053)
+
 [webpack-dev-server](https://www.webpackjs.com/configuration/dev-server/) 参考链接
 
 ```
