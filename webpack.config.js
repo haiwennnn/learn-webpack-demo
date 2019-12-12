@@ -1,6 +1,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const ManifestPlugin = require('webpack-manifest-plugin')
 
 module.exports = {
     entry: './src/script/index.js',
@@ -8,16 +9,24 @@ module.exports = {
         app: './src/script/index.js',
         print: './src/script/print.js',
     },
+    devtool: 'inline-source-map',
+    devServer: {
+        contentBase: './dist',
+        compress: true,
+        port: 9000
+    },
     output: {
         filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: '/'
     },
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             title: 'webpack-study-demo',
             template: './src/index.html'
-        })
+        }),
+        new ManifestPlugin()
     ],
     module: {
         rules: [

@@ -5,6 +5,8 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --open",
+    "server": "node server",
     "build": "webpack"
   },
   "keywords": [],
@@ -13,12 +15,16 @@
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.3.0",
+    "express": "^4.17.1",
     "file-loader": "^5.0.2",
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^1.0.1",
     "url-loader": "^3.0.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-server": "^3.9.0",
+    "webpack-manifest-plugin": "^2.2.0",
     "xml-loader": "^1.2.1"
   },
   "dependencies": {
