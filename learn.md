@@ -293,3 +293,237 @@ if(module.hot){
 
 ## Tree Shaking
 
+``Tree Shaking``是一个术语，用来描述移除JavaScript上下文中的未引用代码（dead-code）。它依赖于ES2015模块系统中的静态结构特性，例如``import``,``export``
+
+``什么是静态结构特性`` ES2015之前的JavaScript模块化是支持动态加载的，载入的模块会在运行时动态变化，静态结构会在引入编译时确定导入和导出的内容不允许在运行时发生变化。
+
+为了使用``Tree Shaking``必须干点事情：
+1. 使用ES2015模块语法
+2. 在项目``package.json``中添加一个``sideEffects``入口
+3. 引用一个能删除未引用代码（dead code）的工具（例如：``UglifyJSPlugin``）
+
+
+## 生产环境构建
+
+分离webpack配置，划分出生产配置文件和开发配置文件
+
+开发配置文件注重错误查询，实时重载，模块热加载等
+
+生产配置文件关注更小的bundle，更轻量的source map，更优化的资源
+
+```
+# 创建创建build/webpack.base.js文件
+
+const path = require('path')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+module.exports = {
+  entry: {
+    app: './src/script/index.js'
+  },
+  output: {
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, '../dist')
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'webpack-study-demo',
+      template: './src/index.html'
+    })
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.(jpg|png|svg|jpeg|gif)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 10000
+            }
+          }
+        ]
+      },
+      {
+        test: /\.xml$/,
+        use: [
+          'xml-loader'
+        ]
+      }
+    ]
+  }
+}
+```
+```
+# 创建build/webpack.dev.js文件
+
+const merge = require('webpack-merge')
+const webpackBase = require('./webpack.base.js')
+const webpack = require('webpack')
+
+module.exports = merge(webpackBase, {
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: './dist'
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ]
+})
+```
+```
+# 创建build/webpack.prod.js
+
+const webpack = require('webpack')
+const webpackBase = require('./webpack.base.js')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const webpackMerge = require('webpack-merge')
+
+module.exports = webpackMerge(webpackBase, {
+  devtool: 'source-map',
+  plugins: [
+    new UglifyJSPlugin({
+      sourceMap: true
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    })
+  ]
+})
+```
+
+设置npm scripts 指令
+```
+"scripts": {
+  "start": "webpack-dev-server --open --config build/webpack.dev.js",
+  "build": "webpack --config build/webpack.prod.js"
+}
+```
+
+
+## 代码分离
+
+代码分离是webpack最引人注目的特性之一，代码分离可以用于获取更小的 bundle，以及控制资源加载优先级，如果使用合理，会极大影响加载时间。
+
+三种常用的分离方式
+
+1. 入口起点：使用``entry``手动分离代码
+2. 防止重复：使用``CommonsChunkPlugin``去重和分离chunk
+3. 动态导入：通过模块的内连函数调用来分离代码
+
+#### 防止重复配置
+
+> webpack4 中已经删除了``CommonChunkPlugin``的引用
+
+```
+# 通过CommonsChunkPlugin插件进行代码去重
+new webpack.optimize.CommonsChunkPlugin({
+  name: 'common' // 指定公共 bundle 的名称。
+})
+```
+
+相关去重插件 [css去重ExtractTextWebpackPlugin](https://www.webpackjs.com/plugins/extract-text-webpack-plugin/)
+
+#### 动态导入
+
+动态导入有两种方式
+
+1. ECMAScript提案中的``import()``方法
+2. webpack特定的``require.ensure()``
+
+``import()``方式
+
+```
+async function getLodash(){
+  var _ = await import( /* webpackChunkName: "lodash" */ 'lodash')
+  return _
+}
+getLodash().then(_ => {
+  _.xxxxx
+})
+```
+
+```动态导入的懒加载实践```
+
+```
+# 将print之前的引入删除，增加一个按钮，在按钮事件触发的时候进行print引入
+btn.onclick = function () {
+  import( /* webpackChunkName: "print" */ './print').then(module => {
+      var print = module.default
+      print()
+  })
+}
+```
+
+按钮点击之后会异步加载print模块
+
+
+## 缓存
+
+使用webpack来打包我们的模块化后的程序，webpack会生成一个可部署的dist目录下的内容，只需要把dist下的内容部署到服务器上，客户端就能够访问相关资源。
+
+浏览器访问资源的时候会使用缓存技术决定是否使用上次缓存下来的资源进行响应，如果我们在部署新版本的时候不更改资源名称，浏览器可能会认为它没有被更新，可能会造成没有使用服务器上最新的代码
+
+#### 给输出的文件命名
+
+```
+# 修改output.filename
+output:{
+  filename: [name].[chunkhash].bundle.js
+}
+
+```
+
+打包后生成的代码会带上一个hash值``app.b075aefef677991fd2df.bundle.js``
+
+> webpack4中已经移除了``CommonChunkPlugin``，要进行代码分割可以使用``SplitChunksPlugin``
+
+```
+# 增加打包配置信息
+output:{ ... },
+optimization: {
+  splitChunks: {
+    chunks: "async",
+    cacheGroups: {
+      commons: {
+        test: /[\\/]node_modules[\\/]/,
+        name: "vendors",
+        chunks: "all"
+      }
+    }
+  }
+},
+plugins:[ ... ]
+```
+
+配置之后可以提取出``node_modules``目录下的模块合并到``vendors.chunkhash.js``文件内，也能打出异步引用的``print.chunkhash.js``
+
+**面临的问题：**
+
+公共模块未更改，当增加或者减少模块时会造成未改变的静态模块文件名被更改
+
+**解决方案：**
+
+使用``HashedModuleIdsPlugin``
+
+```
+plugins: [
+  ...
+  new webpack.HashedModuleIdsPlugin()
+  ...
+]
+```
+
+> 实践证明好像无效，进行模块增减的操作无法保证chunkhash不变，还需再研究研究
+
+
+## 创建Lib

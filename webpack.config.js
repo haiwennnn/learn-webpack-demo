@@ -5,7 +5,7 @@ const ManifestPlugin = require('webpack-manifest-plugin')
 const webpack = require('webpack')
 
 module.exports = {
-    entry: './src/script/index.js',
+    // entry: './src/script/index.js',
     entry: {
         app: './src/script/index.js',
     },
