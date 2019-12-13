@@ -525,5 +525,6 @@ plugins: [
 
 > 实践证明好像无效，进行模块增减的操作无法保证chunkhash不变，还需再研究研究
 
+[splitChunksPlugin](https://www.webpackjs.com/plugins/split-chunks-plugin/)
 
 ## 创建Lib
