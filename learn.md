@@ -528,3 +528,55 @@ plugins: [
 [splitChunksPlugin](https://www.webpackjs.com/plugins/split-chunks-plugin/)
 
 ## 创建Lib
+
+
+## Shimming
+
+``webapck``能够识别遵循ES2015模块语法、CommonJS或AMD规范编写的模块，一些第三方库不合理的引用一些全局依赖使Shimming有了发挥的空间
+
+#### Shimming全局变量
+
+通过``ProvidePlugin``提供一个变量能让全局通过这个变量访问到package
+
+```
+# 暴露整个库
+plugins: [
+    new webpack.ProvidePlugin({
+        _: 'lodash'
+    })
+]
+
+# 暴露模块中的单个值
+plugins: [
+    new webpack.ProvidePlugin({
+        map: ['lodash'.'map']
+    })
+]
+```
+
+#### 细粒度的Shimming
+
+通过``imports-loader``库可以改变目标模块的前置引用、初始变量、上下文环境
+
+[参考链接](https://www.webpackjs.com/loaders/imports-loader/)
+
+还有导出``exports-loader``
+
+[参考链接](https://www.webpackjs.com/loaders/exports-loader/)
+
+#### 加载一些垫子库
+
+
+## 渐进式网络应用程序（PWA）
+
+后续学习（TODO）
+
+## TypeScript
+
+后续学习（TODO）
+
+## 迁移到新版本
+
+后续学习（TODO）
+
+## 使用环境变量
