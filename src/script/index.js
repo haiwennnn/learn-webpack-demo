@@ -1,10 +1,13 @@
 import _ from 'lodash'
 import rs from '../data/data.xml'
 import dm from '../assets/image/1.jpg'
+import txt from '../assets/1.txt?abc=1'
 import { square } from './math'
 import '../style/style.css'
 
 console.log('process.env.NODE_ENV: ', process.env.NODE_ENV)
+
+console.log('txt:', txt)
 
 // async function getResult () {
 //   var _ = await import( /* webpackChunkName: "lodash" */ 'lodash');
@@ -18,7 +21,7 @@ console.log('process.env.NODE_ENV: ', process.env.NODE_ENV)
 var app = document.querySelector('#app')
 
 // getResult().then(data => {
-  // app.innerHTML = data
+// app.innerHTML = data
 // })
 
 app.innerHTML = _.join(['Hello', 'webpack_import', square(3)], '-l-')

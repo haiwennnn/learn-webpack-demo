@@ -580,3 +580,24 @@ plugins: [
 后续学习（TODO）
 
 ## 使用环境变量
+
+举例说明：
+
+```
+# 命令行执行
+
+webpack --env.NODE_ENV=local --env.production=a --env.production=b
+
+# webpack.config.js
+
+module.exports = env => {
+  console.log(env.production) // env => {NODE_ENV:'local':production:['a','b']}
+}
+
+```
+
+#### 命令行接口（command line interface）
+
+后续学习（TODO）
+
+[参考链接](https://www.webpackjs.com/api/cli/#environment-options)

@@ -12,6 +12,12 @@ module.exports = {
     chunkFilename: '[name].[chunkhash].bundle.js',
     path: path.resolve(__dirname, '../dist')
   },
+  resolveLoader: {
+    modules: [
+      'node_modules',
+      path.resolve(__dirname, '../loaders')
+    ]
+  },
   optimization: {
     splitChunks: {
       chunks: "async",
@@ -55,7 +61,19 @@ module.exports = {
       {
         test: /\.xml$/,
         use: [
+          'trans-xml-to-html',
           'xml-loader'
+        ]
+      },
+      {
+        test: /\.txt$/,
+        use: [
+          {
+            loader: 'read-txt',
+            options: {
+              value: 'yhw'
+            }
+          }
         ]
       }
     ]
