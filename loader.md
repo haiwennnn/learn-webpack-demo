@@ -1,7 +1,12 @@
 # 编写一个Loader
 
-``loader``是导出为一个函数的node模块。
-该函数在``loader``转换资源的时候调用。
+### 什么是loader
+
+将非js的东西转换成js模块，比如css、图片、xml、html等东西
+
+每个``loader``在代码上都会``module.exports = function()``导出一个方法
+
+``loader``遇到相应的资源会用该方法对资源进行处理，最终变成一个js模块
 
 ### 简单的使用
 
