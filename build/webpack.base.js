@@ -2,6 +2,8 @@ const path = require('path')
 const webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const SimplePlugin = require('../plugins/simple-plugin')
+const FileListPlugin = require('../plugins/file-list-plugin')
 
 module.exports = {
   entry: {
@@ -36,7 +38,9 @@ module.exports = {
       title: 'webpack-study-demo',
       template: './src/index.html'
     }),
-    new webpack.HashedModuleIdsPlugin()
+    new webpack.HashedModuleIdsPlugin(),
+    new SimplePlugin(),
+    new FileListPlugin()
   ],
   module: {
     rules: [
