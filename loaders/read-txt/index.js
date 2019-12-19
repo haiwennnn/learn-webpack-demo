@@ -13,10 +13,10 @@ module.exports = function (content) {
   console.log('this.resource:      ', this.resource)
 
   var callback = this.callback
-  const json = JSON.stringify(content.replace(/\[value\]/, options.value))
-  callback(null, `export default ${json}`)
+  const json = content.replace(/\[value\]/, options.value)
+  // callback(null, `export default ${json}`)
   // return `export default ${json}`
-  return
+  return json
 }
 
 // module.exports.raw = true;

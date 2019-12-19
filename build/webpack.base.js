@@ -61,13 +61,13 @@ module.exports = {
       {
         test: /\.xml$/,
         use: [
-          'trans-xml-to-html',
           'xml-loader'
         ]
       },
       {
         test: /\.txt$/,
         use: [
+          'trans-xml-to-html',
           {
             loader: 'read-txt',
             options: {
