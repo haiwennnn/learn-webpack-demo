@@ -24,7 +24,7 @@ var app = document.querySelector('#app')
 // app.innerHTML = data
 // })
 
-app.innerHTML = _.join(['Hello', 'webpack_import', square(3)], '-l-')
+app.innerHTML = _.join(['Hello3', 'webpack_import', square(3)], '-l-')
 
 
 // setText(app, ['Hello', 'webpack2', square(2)])

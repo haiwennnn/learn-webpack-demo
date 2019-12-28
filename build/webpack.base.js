@@ -10,8 +10,8 @@ module.exports = {
     app: './src/script/index.js'
   },
   output: {
-    filename: '[name].[chunkhash].bundle.js',
-    chunkFilename: '[name].[chunkhash].bundle.js',
+    filename: '[name].[hash].bundle.js',
+    chunkFilename: '[name].[hash].bundle.js',
     path: path.resolve(__dirname, '../dist')
   },
   resolveLoader: {
@@ -22,7 +22,7 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: "async",
+      // chunks: "async",
       cacheGroups: {
         commons: {
           test: /[\\/]node_modules[\\/]/,

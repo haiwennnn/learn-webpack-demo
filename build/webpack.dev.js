@@ -1,11 +1,14 @@
 const merge = require('webpack-merge')
 const webpackBase = require('./webpack.base.js')
 const webpack = require('webpack')
+const path = require('path')
 
 module.exports = merge(webpackBase, {
-  devtool: 'inline-source-map',
+  // devtool: 'inline-source-map',
   devServer: {
-    contentBase: './dist'
+    contentBase: path.join(__dirname, "dist"),
+    port: 9000,
+    // hot: true
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()
